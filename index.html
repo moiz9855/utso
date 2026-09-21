@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>For Utso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #1b271c;
+    --moss: #24331f;
+    --leaf: #587a45;
+    --bark: #3a281c;
+    --cocoa: #2a1c13;
+    --petal: #f4edddc0;
+    --ink: #f1ebdd;
+    --ink-soft: #cfc5ad;
+    --serif: "Fraunces", Georgia, "Times New Roman", serif;
+    --sans: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--forest);
+    color: var(--ink);
+    font-family: var(--serif);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Lily drawing ---------- */
+  .lily-svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .petal {
+    transform: rotate(var(--r)) scale(var(--s, .14));
+    transition: transform 1.7s cubic-bezier(.2, .85, .25, 1) var(--d, 0ms),
+                opacity 1.1s ease var(--d, 0ms);
+  }
+  .lily.open .petal { --s: 1; }
+  .lily.hero:not(.open) .petal { opacity: 0; }
+
+  /* ---------- Hero ---------- */
+  .hero-wrap {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 3rem 1.25rem 4rem;
+    background: radial-gradient(circle at 50% 38%, #34492c 0%, #223221 45%, var(--forest) 80%);
+    text-align: center;
+  }
+  .hero { width: min(80vw, 430px); }
+  h1 {
+    margin: .5rem 0 0;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(4rem, 17vw, 9rem);
+    line-height: .95;
+    letter-spacing: -.03em;
+    font-variation-settings: "opsz" 144;
+  }
+  .tagline {
+    margin: 0;
+    font-size: clamp(1.1rem, 3.6vw, 1.5rem);
+    font-weight: 300;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- Letter ---------- */
+  .letter-wrap {
+    background: var(--bark);
+    padding: clamp(4rem, 12vw, 8rem) 1.5rem;
+  }
+  .letter {
+    max-width: 34rem;
+    margin: 0 auto;
+    font-size: clamp(1.1rem, 2.6vw, 1.28rem);
+    line-height: 1.8;
+    font-weight: 350;
+    font-variation-settings: "opsz" 14;
+  }
+  .letter p { margin: 0 0 1.4em; }
+  .letter .to {
+    font-size: 2.2rem;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: .8em;
+    font-variation-settings: "opsz" 72;
+  }
+  .letter .from {
+    font-style: italic;
+    font-size: 1.5rem;
+    margin: 2rem 0 0;
+    color: #e2d5b6;
+  }
+
+  /* ---------- Three lilies ---------- */
+  .garden {
+    background: var(--moss);
+    padding: clamp(4rem, 12vw, 7rem) 1.5rem clamp(5rem, 14vw, 8rem);
+    text-align: center;
+  }
+  .garden h2 {
+    margin: 0 auto .4rem;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(2rem, 6vw, 3rem);
+    font-variation-settings: "opsz" 96;
+  }
+  .garden .hint {
+    margin: 0 0 3.5rem;
+    font-family: var(--sans);
+    font-size: 1rem;
+    color: var(--ink-soft);
+  }
+  .bloom {
+    max-width: 62rem;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 3.5rem 2rem;
+  }
+  .bloom button {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .6rem;
+  }
+  .bloom button:focus-visible { outline: 2px solid #e2d5b6; outline-offset: 8px; border-radius: 8px; }
+  .bloom .lily { width: min(210px, 62vw); }
+  .bloom .name {
+    font-size: 1.9rem;
+    font-style: italic;
+    font-weight: 300;
+    font-variation-settings: "opsz" 72;
+  }
+  .reveal {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows .7s ease;
+  }
+  .reveal > div { overflow: hidden; }
+  .reveal p {
+    margin: 0 auto;
+    padding-top: .9rem;
+    max-width: 20rem;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    font-weight: 350;
+  }
+  .card.is-open .reveal { grid-template-rows: 1fr; }
+
+  footer {
+    background: var(--cocoa);
+    padding: 3rem 1.5rem;
+    text-align: center;
+    font-size: 1.15rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--ink-soft);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .petal, .reveal { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- shared gradients -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="gLeaf" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7ea25e"/>
+      <stop offset="1" stop-color="#34502f"/>
+    </linearGradient>
+    <linearGradient id="gBack" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e9dfc6"/>
+      <stop offset="1" stop-color="#aeb47f"/>
+    </linearGradient>
+    <linearGradient id="gPetal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbf6ea"/>
+      <stop offset=".62" stop-color="#f2e7cd"/>
+      <stop offset="1" stop-color="#c4cd94"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<header class="hero-wrap">
+  <div class="lily hero" id="heroLily"></div>
+  <h1>Utso</h1>
+  <p class="tagline">For my friend, my sister, my mentor.</p>
+</header>
+
+<main>
+  <section class="letter-wrap" aria-label="A letter for Utso">
+    <div class="letter">
+      <p class="to">Utso,</p>
+      <p>I've wanted to make something for you for a while, and no ordinary message felt big enough. So here it is: a small garden, just for you.</p>
+      <p>We've been friends for a year and a half now, and somewhere along the way you stopped being just a friend. You became the person I trust, the person I go to when things get confusing, the sister I got to choose.</p>
+      <p>You're also the best mentor I've ever had. You push me to think better and do better, and you do it with patience, even when I don't make it easy. A lot of what I'm getting right, I'm getting right because of you.</p>
+      <p>I picked lilies because they're your favorite, and because they bloom quietly and make the whole place brighter without asking for credit. That felt like you. Brown and green, because that's you too: steady, grounded, always growing.</p>
+      <p>Thank you for being there. Thank you for being you.</p>
+      <p class="from">Andy</p>
+    </div>
+  </section>
+
+  <section class="garden" aria-labelledby="gTitle">
+    <h2 id="gTitle">Three things you are to me</h2>
+    <p class="hint">Tap a lily to open it.</p>
+    <div class="bloom" id="bloom"></div>
+  </section>
+</main>
+
+<footer>Made with love, for Utso.</footer>
+
+<script>
+  var PETAL = "M0,0 C22,-22 30,-70 0,-112 C-30,-70 -22,-22 0,0Z";
+  var LEAF  = "M0,0 C18,-34 22,-100 0,-138 C-22,-100 -18,-34 0,0Z";
+  var SPECKS = [[-6,-36],[6,-44],[-8,-56],[5,-64],[-4,-74],[8,-78],[-2,-90],[3,-52]];
+
+  function lily(speed) {
+    var s = speed || 1, h = "", i, r;
+    h += '<svg class="lily-svg" viewBox="0 0 300 300" aria-hidden="true"><g transform="translate(150,150)">';
+
+    // leaves behind
+    for (i = 0; i < 6; i++) {
+      r = 15 + 60 * i;
+      h += '<path class="petal" style="--r:' + r + 'deg;--d:' + Math.round(i * 80 * s) + 'ms" d="' + LEAF + '" fill="url(#gLeaf)"/>';
+    }
+    // back petals
+    for (i = 0; i < 6; i++) {
+      r = 30 + 60 * i;
+      h += '<g class="petal" style="--r:' + r + 'deg;--d:' + Math.round((450 + i * 100) * s) + 'ms">' +
+           '<path d="' + PETAL + '" fill="url(#gBack)"/>' +
+           '<path d="M0,-8 L0,-90" stroke="#8f9a63" stroke-width="1.2" opacity=".5" fill="none"/></g>';
+    }
+    // front petals with speckles
+    for (i = 0; i < 6; i++) {
+      r = 60 * i;
+      var dots = "";
+      for (var k = 0; k < SPECKS.length; k++) {
+        dots += '<circle cx="' + SPECKS[k][0] + '" cy="' + SPECKS[k][1] + '" r="' + (1.3 + (k % 3) * .35) + '" fill="#7a4a2a" opacity=".85"/>';
+      }
+      h += '<g class="petal" style="--r:' + r + 'deg;--d:' + Math.round((900 + i * 110) * s) + 'ms">' +
+           '<path d="' + PETAL + '" fill="url(#gPetal)" stroke="#d9c9a2" stroke-width=".8"/>' +
+           '<path d="M0,-6 L0,-34" stroke="#93a463" stroke-width="7" stroke-linecap="round" opacity=".45" fill="none"/>' +
+           '<path d="M0,-10 L0,-96" stroke="#b9a678" stroke-width="1" opacity=".55" fill="none"/>' +
+           dots + '</g>';
+    }
+    // stamens
+    for (i = 0; i < 6; i++) {
+      r = 30 + 60 * i;
+      h += '<g class="petal" style="--r:' + r + 'deg;--d:' + Math.round((2000 + i * 70) * s) + 'ms">' +
+           '<line x1="0" y1="0" x2="0" y2="-46" stroke="#d8cca6" stroke-width="1.6" stroke-linecap="round"/>' +
+           '<ellipse cx="0" cy="-49" rx="3.2" ry="8" fill="#7a3f1e"/></g>';
+    }
+    h += '<circle r="8" fill="#7e9a4f"/><circle r="3.6" fill="#b9c77a"/>';
+    h += '</g></svg>';
+    return h;
+  }
+
+  // hero lily blooms once on load
+  var hero = document.getElementById("heroLily");
+  hero.innerHTML = lily(1);
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce) { hero.classList.add("open"); }
+  else { setTimeout(function () { hero.classList.add("open"); }, 350); }
+
+  // three tap-to-open lilies
+  var CARDS = [
+    { name: "Sister", text: "Not by blood, but it has never felt any different. You are family to me." },
+    { name: "Mentor", text: "You teach me how to think, not just what to do. The best mentor I could have asked for." },
+    { name: "Friend", text: "A year and a half in, and you have made every bit of it better." }
+  ];
+  var bloom = document.getElementById("bloom");
+  CARDS.forEach(function (c, idx) {
+    var el = document.createElement("article");
+    el.className = "card";
+    el.innerHTML =
+      '<button type="button" aria-expanded="false" aria-controls="r' + idx + '">' +
+        '<div class="lily">' + lily(.4) + '</div>' +
+        '<span class="name">' + c.name + '</span>' +
+      '</button>' +
+      '<div class="reveal" id="r' + idx + '"><div><p>' + c.text + '</p></div></div>';
+    var btn = el.querySelector("button");
+    var lil = el.querySelector(".lily");
+    btn.addEventListener("click", function () {
+      var openNow = el.classList.toggle("is-open");
+      lil.classList.toggle("open", openNow);
+      btn.setAttribute("aria-expanded", openNow ? "true" : "false");
+    });
+    bloom.appendChild(el);
+  });
+</script>
+</body>
+</html>
